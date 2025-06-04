@@ -185,6 +185,27 @@ class Normal(LocationScale):
             if np.any(state[self.response] > self.domain_response_upper):
                 return True
         return False
+    
+    def check_state(self, state: dict) -> bool:
+        """Checks whether the distributional response lies OUTSIDE the defined limits.
+
+        Returns True if the current value of self.response in the supplied state lies OUTSIDE the stated domain;
+        returns False otherwise.
+
+        Args:
+            state (dict): dictionary object containing the current parameter information.
+
+        Returns:
+            (bool): True when the response lies OUTSIDE the valid response domain; False when it lies INSIDE.
+
+        """
+        if self.domain_response_lower is not None:
+            if np.any(state[self.response] < self.domain_response_lower):
+                return True
+        if self.domain_response_upper is not None:
+            if np.any(state[self.response] > self.domain_response_upper):
+                return True
+    return False
 
     def grad_log_p(
         self, state: dict, param: str, hessian_required: bool = True

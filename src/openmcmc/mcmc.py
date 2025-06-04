@@ -80,8 +80,9 @@ class MCMC:
                 self.state[sampler.param] = sampler.model[sampler.param].rvs(self.state)
             self.store = sampler.init_store(current_state=self.state, store=self.store, n_iterations=self.n_iter)
         if self.model.response is not None:
-            for response in self.model.response.keys():
-                self.store[response] = np.full(shape=(self.state[response].size, self.n_iter), fill_value=np.nan)
+            for response_name, value in self.model.response.keys():
+                self.store[response_name] = np.full(
+                    shape=(self.state["response"].size, self.n_iter), fill_value=np.nan)
         self.store["log_post"] = np.full(shape=(self.n_iter, 1), fill_value=np.nan)
 
     def run_mcmc(self):
@@ -107,8 +108,8 @@ class MCMC:
 
             self.store["log_post"][i_it] = self.model.log_p(self.state)
             if self.model.response is not None:
-                for response, predictor in self.model.response.items():
-                    self.store[response][:, [i_it]] = getattr(self.model[response], predictor).predictor(self.state)
+                for response_name, value in self.model.response.items():
+                    self.store[response_name][:, [i_it]] = getattr(self.model[value["response"]], value["predictor"]).predictor(self.state)
 
         for sampler in self.samplers:
             if isinstance(sampler, MetropolisHastings):
