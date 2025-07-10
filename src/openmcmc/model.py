@@ -109,3 +109,12 @@ class Model(dict):
             return grad_sum, hessian_sum
 
         return grad_sum
+
+
+    def check_domain_response(self):
+        """Check whether the current domain response is valid.
+
+        Returns:
+            (bool): true/flag of whether the current state is valid.
+
+        """
