@@ -111,7 +111,7 @@ class Model(dict):
         return grad_sum
 
 
-    def check_domain_response(self, state: dict) -> bool:
+    def check_state(self, state: dict) -> bool:
         """check_state for full model.
 
         Args:

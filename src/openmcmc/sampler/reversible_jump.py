@@ -43,7 +43,8 @@ class ReversibleJump(MetropolisHastings):
         associated_params (list or string): a list or a string associated with the dimension jump. List of additional
             parameters that need to be created/removed as part of the dimension change. The default behaviour is to
             sample the necessary additional values from the associated parameter prior distribution. Defaults to None.
-        n_max (int): upper limit on self.param (lower limit is assumed to be 1).
+        n_min (int): lower limit on self.param
+        n_max (int): upper limit on self.param 
         birth_probability (float): probability that a birth move is chosen on any given iteration of the algorithm
             (death_probability = 1 - birth_probability). Defaults to 0.5.
         state_birth_function (Callable): function which implements problem-specific requirements for updates to elements
@@ -57,6 +58,7 @@ class ReversibleJump(MetropolisHastings):
     """
 
     associated_params: Union[list, str, None] = None
+    n_min: Union[int, None] = 1
     n_max: Union[int, None] = None
     birth_probability: float = 0.5
     state_birth_function: Union[Callable, None] = None
@@ -312,7 +314,7 @@ class ReversibleJump(MetropolisHastings):
 
         Logic for the choice of move is as follows:
             - if state[self.param]=self.n_max, it is not possible to increase self.param, so a death move is chosen.
-            - if state[self.param]=1, it is not possible to decrease self.param, so a birth move is chosen.
+            - if state[self.param]=self.n_min, it is not possible to decrease self.param, so a birth move is chosen.
             - in any other state, a birth move is chosen with probability self.birth_probability, or a death move is
                 chosen with probability (1 - self.birth_probability).
 
@@ -325,7 +327,7 @@ class ReversibleJump(MetropolisHastings):
         """
         if current_state[self.param] == self.n_max:
             return False
-        if current_state[self.param] == 1:
+        if current_state[self.param] == self.n_min:
             return True
 
         return uniform.rvs() <= self.birth_probability
@@ -364,8 +366,8 @@ class ReversibleJump(MetropolisHastings):
         if current_state[self.param] == (self.n_max - 1) and birth:
             p_death = 1.0
 
-        if current_state[self.param] == 1:
+        if current_state[self.param] == self.n_min:
             p_birth = 1.0
-        if current_state[self.param] == 2 and not birth:
+        if current_state[self.param] == (self.n_min + 1) and not birth:
             p_birth = 1.0
         return p_birth, p_death

@@ -160,7 +160,7 @@ class Normal(LocationScale):
         """
         Q = self.precision.predictor(state)
         mu = self.mean.predictor(state)
-        if self.check_domain_response(state):
+        if self.check_state(state):
             return -np.inf
         log_p = gmrf.multivariate_normal_pdf(x=state[self.response], mu=mu, Q=Q, by_observation=by_observation)
         return log_p
