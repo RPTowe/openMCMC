@@ -121,6 +121,10 @@ class MetropolisHastings(MCMCSampler):
 
         """
         prop_state, logp_pr_g_cr, logp_cr_g_pr = self.proposal(current_state)
+        
+        if self.model.check_state(prop_state):
+            return prop_state, 0, -np.inf
+        
         current_state = self._accept_reject_proposal(current_state, prop_state, logp_pr_g_cr, logp_cr_g_pr)
         return current_state
 
@@ -232,6 +236,9 @@ class RandomWalk(MetropolisHastings):
 
         """
         prop_state = deepcopy(current_state)
+        
+        if self.model.check_state(prop_state):
+            return prop_state, 0, -np.inf
 
         if param_index is None:
             mu = prop_state[self.param]
@@ -310,6 +317,10 @@ class ManifoldMALA(MetropolisHastings):
 
         mu_cr, chol_cr = self._proposal_params(current_state)
         prop_state[self.param] = gmrf.sample_normal(mu_cr, L=chol_cr)
+        
+        if self.model.check_state(prop_state):
+            return prop_state, 0, -np.inf
+        
         logp_pr_g_cr = self._log_proposal_density(prop_state, mu_cr, chol_cr)
 
         mu_pr, chol_pr = self._proposal_params(prop_state)

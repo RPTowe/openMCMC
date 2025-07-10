@@ -111,10 +111,18 @@ class Model(dict):
         return grad_sum
 
 
-    def check_domain_response(self):
-        """Check whether the current domain response is valid.
+    def check_domain_response(self, state: dict) -> bool:
+        """check_state for full model.
+
+        Args:
+            state (dict): dictionary with current state information.
 
         Returns:
-            (bool): true/flag of whether the current state is valid.
+            bool: True if state is invalid, False otherwise.
 
         """
+        for dst in self.values():
+            if dst.check_state(state):
+                return True
+
+        return False

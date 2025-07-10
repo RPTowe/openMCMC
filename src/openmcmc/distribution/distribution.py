@@ -194,6 +194,18 @@ class Distribution(ABC):
 
         return hess_param
 
+    def check_domain_response(self, state: dict) -> bool:
+        """Check parameters in state are consistent with domain of distribution.
+
+        Default version does no checks.
+
+        Args: state (dict): current state information.
+
+        Returns: bool: True if state is invalid, False otherwise.
+
+        """
+        return False
+
 
 @dataclass
 class Gamma(Distribution):
