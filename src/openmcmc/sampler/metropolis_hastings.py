@@ -121,10 +121,7 @@ class MetropolisHastings(MCMCSampler):
 
         """
         prop_state, logp_pr_g_cr, logp_cr_g_pr = self.proposal(current_state)
-        
-        if self.model.check_state(prop_state):
-            return prop_state, 0, -np.inf
-        
+               
         current_state = self._accept_reject_proposal(current_state, prop_state, logp_pr_g_cr, logp_cr_g_pr)
         return current_state
 

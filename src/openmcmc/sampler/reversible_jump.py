@@ -58,7 +58,7 @@ class ReversibleJump(MetropolisHastings):
     """
 
     associated_params: Union[list, str, None] = None
-    n_min: Union[int, None] = 1
+    n_min: float = 1
     n_max: Union[int, None] = None
     birth_probability: float = 0.5
     state_birth_function: Union[Callable, None] = None
